@@ -36,4 +36,12 @@ public class Queue {
     public void removeMessage(List<Message> messages) {
         this.messages.removeAll(messages);
     }
+
+    public List<Message>  getMessages() {
+        return messages;
+    }
+
+    public String getQueueId() {
+        return queueId;
+    }
 }

@@ -20,4 +20,10 @@ public abstract class CommandServer {
     protected static String byteToString(byte[] command, int begin, int length) {
         return new String (Arrays.copyOfRange(command, begin, begin+length));
     }
+
+    protected static void insertIntToBytes(byte[] command, int value, int length,int position) {
+        for (int i=0;i<length;i++) {
+            command[i+position] = (byte)((value>>((length-i-1)*8)) & 0xFF);
+        }
+    }
 }

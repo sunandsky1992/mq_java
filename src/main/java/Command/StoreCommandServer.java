@@ -4,6 +4,10 @@ import Constant.Constant;
 import Queue.*;
 import StoreServer.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,28 +18,28 @@ import java.util.List;
 public class StoreCommandServer extends CommandServer {
     int position;
 
+    Socket connect ;
+
     StoreServer storeServer;
 
-    StoreCommandServer(StoreServer storeServer) {
-        this.storeServer = storeServer;
+    public StoreCommandServer(Socket connect) {
+        this.storeServer = new StoreServerByRedis();
+        this.connect = connect;
     }
 
     public void analysisCommand(byte[] command) {
-        position = 1;
-        if ((command[0]>>7&0x1) ==1) {
-            List<Queue> queues = getInsertQueue(command);
-            insertMessage(queues);
-        } else if ((command[0]>>6 & 0x1)  == 1){
-            List<ReadCommand> readCommands = getReadQueue(command);
-            List<Queue> queues = readMessage(readCommands);
+        position = 3;//前两位是总长度
+        if ((command[2]>>7&0x1) ==1) {
+            Queue queue = getInsertQueue(command);
+            insertMessage(queue);
+        } else if ((command[2]>>6 & 0x1)  == 1){
+            ReadCommand readCommand = getReadQueue(command);
+            Queue queue = readMessage(readCommand);
+            sendMessage(queue);
         }
     }
 
-    private List<ReadCommand> getReadQueue(byte[] command) {
-        List<ReadCommand> readCommands = new ArrayList<ReadCommand>();
-        int queueNum = byteToInt(command, position, Constant.QUEUE_NUMBER);
-        position += Constant.QUEUE_NUMBER;
-        while (queueNum-- > 0) {
+    private ReadCommand getReadQueue(byte[] command) {
             int queueNameLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position+=Constant.QUEUE_NAME_LENGTH;
             String queueId = byteToString(command, position, queueNameLength);
@@ -43,16 +47,10 @@ public class StoreCommandServer extends CommandServer {
             int messageNum = byteToInt(command, position, Constant.MESSAGE_NUMBER);
             position+=Constant.MESSAGE_NUMBER;
             ReadCommand readCommand = new ReadCommand(queueId,messageNum);
-            readCommands.add(readCommand);
-        }
-        return readCommands;
+        return readCommand;
     }
 
-    private List<Queue> getInsertQueue(byte[] command) {
-        List<Queue> queues = new ArrayList<Queue>();
-        int queueNum = byteToInt(command,position,Constant.QUEUE_NUMBER);
-        position+= Constant.QUEUE_NUMBER;
-        while (queueNum-- >0) {
+    private Queue getInsertQueue(byte[] command) {
             int queueNameLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position+=Constant.QUEUE_NAME_LENGTH;
             String queueId = byteToString(command,position,queueNameLength);
@@ -68,34 +66,60 @@ public class StoreCommandServer extends CommandServer {
                 Message message = new Message(messageByte,0);
                 queue.insertMessage(message);
             }
-            queues.add(queue);
+        return queue;
+    }
+
+    private void insertMessage(Queue queue) {
+        storeServer.storeMessage(queue);
+    }
+
+    private Queue readMessage(ReadCommand readCommand) {
+        Queue queue = storeServer.getMessage(readCommand.getNumber(),readCommand.getQueueName());
+        return queue;
+    }
+
+    private void sendMessage(Queue queue) {
+        int length = 2;
+        //length += l;
+        //length++;
+        length+=2;//消息总数
+        int messageNumber = 0;
+        for (Message message :queue.getMessages()) {
+            length += 2;//消息长度
+            length += message.getContent().length;//消息实际长度
+            messageNumber++;
         }
-        return queues;
-    }
+        byte command[] = new byte[length];
 
-    private void insertMessage(List<Queue> queues) {
-        storeServer.storeMessage(queues);
-    }
-
-    private List<Queue> readMessage(List<ReadCommand> readCommands) {
-        List<Queue> queues = new ArrayList<Queue>();
-        for (ReadCommand readCommand : readCommands) {
-            Queue queue = storeServer.getMessage(readCommand.getNumber(),readCommand.getQueueName());
-            queues.add(queue);
+        int position = 0;
+        insertIntToBytes(command,length,Constant.TOTAL_LENGTH,position);
+        position += Constant.TOTAL_LENGTH;
+        insertIntToBytes(command,messageNumber,Constant.MESSAGE_NUMBER,position);
+        position +=Constant.MESSAGE_LENGTH;
+        for (Message message:queue.getMessages()) {
+            int messageLength = message.getContent().length;
+            insertIntToBytes(command,messageLength,Constant.MESSAGE_LENGTH,position);
+            position+=Constant.MESSAGE_LENGTH;
+            System.arraycopy(command,0,command,position,messageLength);
+            position+=messageLength;
         }
-        return queues;
-    }
 
-    private void sendMessage(List<Queue> queues) {
-        storeServer.sendMessage(queues);
+        try {
+            OutputStream out = connect.getOutputStream();
+            out.write(command);
+            out.flush();
+            connect.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String args[]) {
-        byte[] command = {(byte)128,1,2,0,97,1,0,2,0,97};
+        byte[] command = {0,8,(byte)64,1,97,1,0,1,97};
         byte[] test2 = "a".getBytes();
         System.out.println(Arrays.toString(test2));
         System.out.println(byteToString(test2, 0, 2));
-        StoreCommandServer t = new StoreCommandServer(new StoreServerByRedis());
+        StoreCommandServer t = new StoreCommandServer(null);
         t.analysisCommand(command);
     }
 }

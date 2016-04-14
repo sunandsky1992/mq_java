@@ -9,9 +9,8 @@ import java.util.List;
  */
 public interface StoreServer {
 
-    public void storeMessage(List<Queue> queues);
+    public void storeMessage(Queue queue);
 
     public Queue getMessage(int number, String QueueId);
 
-    public void sendMessage(List<Queue> queues);
 }
