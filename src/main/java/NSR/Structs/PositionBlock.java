@@ -1,24 +1,24 @@
-package NSR;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+package NSR.Structs;
 
 /**
- * Created by ss on 16-4-14.
+ * Created by ss on 16-4-18.
  */
-class PositionBlock {
+public class PositionBlock {
+    private String queueName;
     private int queueNumber;
     private String queueId;
     private PositionBlock next;
     private String addr;
     private int port;
 
-    PositionBlock(String addr, int port,int queueNumber) {
+
+    PositionBlock(String addr, int port,int queueNumber,String queueName) {
+        this.queueName = queueName;
         this.addr = addr;
         this.port = port;
         this.queueNumber = queueNumber;
         this.queueId = addr+":"+port+queueNumber;
+        next = null;
     }
 
     public String getQueueId() {
@@ -40,18 +40,21 @@ class PositionBlock {
     public int getPort() {
         return port;
     }
-}
 
-public class LinkedStorePositionMap {
-    Map<String, PositionBlock> queuePosition;
-
-    
-    LinkedStorePositionMap () {
-        queuePosition = new HashMap<String, PositionBlock>();
+    public int getQueueNumber() {
+        return queueNumber;
     }
 
-    public void insertPosition(String queueName, String addr, int port) {
-
+    public void setQueueNumber(int queueNumber) {
+        this.queueNumber = queueNumber;
     }
 
+    public String getQueueName() {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
+    }
 }
+

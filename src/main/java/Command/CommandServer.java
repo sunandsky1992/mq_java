@@ -9,7 +9,7 @@ import java.util.Arrays;
 public abstract class CommandServer {
     public abstract void analysisCommand(byte[] command);
 
-    protected static int byteToInt(byte[] command, int begin, int length) {
+    public static int byteToInt(byte[] command, int begin, int length) {
         int res = 0;
         for (int i = begin;i<begin+length;i++){
             res = res << 8 | command[i];
@@ -17,11 +17,11 @@ public abstract class CommandServer {
         return res;
     }
 
-    protected static String byteToString(byte[] command, int begin, int length) {
+    public static String byteToString(byte[] command, int begin, int length) {
         return new String (Arrays.copyOfRange(command, begin, begin+length));
     }
 
-    protected static void insertIntToBytes(byte[] command, int value, int length,int position) {
+    public static void insertIntToBytes(byte[] command, int value, int length,int position) {
         for (int i=0;i<length;i++) {
             command[i+position] = (byte)((value>>((length-i-1)*8)) & 0xFF);
         }

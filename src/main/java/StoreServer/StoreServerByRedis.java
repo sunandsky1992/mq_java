@@ -1,8 +1,10 @@
 package StoreServer;
 
+import Command.StoreCommandServer;
+import Constant.Constant;
 import Queue.*;
+import SocketServer.*;
 import redis.clients.jedis.*;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.List;
 
@@ -67,8 +69,15 @@ public class StoreServerByRedis implements StoreServer{
         return queue;
     }
 
+    public long getQueueLength(String queueId) {
+        Jedis jedis = jedisPool.getResource();
+        long res = jedis.llen(queueId);
+        jedis.close();
+        return res;
+    }
+
     public static void main(String args[]){
-        StoreServerByRedis storeServerByRedis = new StoreServerByRedis();
-        storeServerByRedis.getMessage(3, "test");
+        SocketServer server = new SocketServer("localhost",8000,Constant.STORE_COMMAND_SERVER,"storeTest");
+        server.listen();
     }
 }

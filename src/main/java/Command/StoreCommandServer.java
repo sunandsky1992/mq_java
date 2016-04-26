@@ -22,21 +22,30 @@ public class StoreCommandServer extends CommandServer {
 
     StoreServer storeServer;
 
-    public StoreCommandServer(Socket connect) {
+    public StoreCommandServer() {
         this.storeServer = new StoreServerByRedis();
-        this.connect = connect;
     }
 
     public void analysisCommand(byte[] command) {
-        position = 3;//前两位是总长度
-        if ((command[2]>>7&0x1) ==1) {
+        position = 1;
+        if ((command[0]>>7&0x1) ==1) {
+            System.out.println("insert queue" + command);
             Queue queue = getInsertQueue(command);
             insertMessage(queue);
-        } else if ((command[2]>>6 & 0x1)  == 1){
+        } else if ((command[0]>>6 & 0x1)  == 1) {
             ReadCommand readCommand = getReadQueue(command);
+            System.out.println("read queue" + command);
             Queue queue = readMessage(readCommand);
             sendMessage(queue);
+        } else if ((command[0]>>5 & 0x1) == 1) {
+            System.out.println("read queue length" + command);
+            long length = getQueueLength(command);
+            sendQueueLength((int)length);
         }
+    }
+
+    public void setConnect(Socket connect) {
+        this.connect = connect;
     }
 
     private ReadCommand getReadQueue(byte[] command) {
@@ -85,22 +94,21 @@ public class StoreCommandServer extends CommandServer {
         length+=2;//消息总数
         int messageNumber = 0;
         for (Message message :queue.getMessages()) {
-            length += 2;//消息长度
+            length += Constant.MESSAGE_LENGTH;//消息长度
             length += message.getContent().length;//消息实际长度
             messageNumber++;
         }
         byte command[] = new byte[length];
-
         int position = 0;
         insertIntToBytes(command,length,Constant.TOTAL_LENGTH,position);
         position += Constant.TOTAL_LENGTH;
-        insertIntToBytes(command,messageNumber,Constant.MESSAGE_NUMBER,position);
-        position +=Constant.MESSAGE_LENGTH;
+        insertIntToBytes(command, messageNumber, Constant.MESSAGE_NUMBER, position);
+        position +=Constant.MESSAGE_NUMBER;
         for (Message message:queue.getMessages()) {
             int messageLength = message.getContent().length;
             insertIntToBytes(command,messageLength,Constant.MESSAGE_LENGTH,position);
             position+=Constant.MESSAGE_LENGTH;
-            System.arraycopy(command,0,command,position,messageLength);
+            System.arraycopy(message.getContent(), 0, command, position, messageLength);
             position+=messageLength;
         }
 
@@ -108,7 +116,34 @@ public class StoreCommandServer extends CommandServer {
             OutputStream out = connect.getOutputStream();
             out.write(command);
             out.flush();
-            connect.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public long getQueueLength(byte[] command) {
+        int queueNameLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
+        position+=Constant.QUEUE_NAME_LENGTH;
+        String queueId = byteToString(command,position,queueNameLength);
+        position+=queueNameLength;
+        return storeServer.getQueueLength(queueId);
+    }
+
+    private void sendQueueLength(int length) {
+        int commandLength = 4;
+        byte command[] = new byte[commandLength];
+
+        int position = 0;
+        insertIntToBytes(command, commandLength, Constant.TOTAL_LENGTH, position);
+        position += Constant.TOTAL_LENGTH;
+        insertIntToBytes(command, length, Constant.INT_LENGTH, position);
+        position +=Constant.INT_LENGTH;
+
+        try {
+            OutputStream out = connect.getOutputStream();
+            out.write(command);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,7 +154,7 @@ public class StoreCommandServer extends CommandServer {
         byte[] test2 = "a".getBytes();
         System.out.println(Arrays.toString(test2));
         System.out.println(byteToString(test2, 0, 2));
-        StoreCommandServer t = new StoreCommandServer(null);
+        StoreCommandServer t = new StoreCommandServer();
         t.analysisCommand(command);
     }
 }

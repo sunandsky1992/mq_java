@@ -1,4 +1,4 @@
-package NSR;
+package NSR.Structs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by ss on 16-4-14.
  */
 public class HashStoreLoadMap {
-    Map<String,StoreLoad> storeLoadMap = new HashMap<String,StoreLoad>();
+    Map<String, StoreLoad> storeLoadMap = new HashMap<String,StoreLoad>();
 
     public Map<String,StoreLoad> getStoreLoadMap(){
         return storeLoadMap;

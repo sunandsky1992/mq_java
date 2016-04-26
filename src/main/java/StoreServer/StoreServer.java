@@ -13,4 +13,6 @@ public interface StoreServer {
 
     public Queue getMessage(int number, String QueueId);
 
+    public long getQueueLength(String QueueId);
+
 }

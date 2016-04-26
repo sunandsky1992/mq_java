@@ -1,4 +1,4 @@
-package NSR;
+package NSR.Structs;
 
 /**
  * Created by ss on 16-4-14.
