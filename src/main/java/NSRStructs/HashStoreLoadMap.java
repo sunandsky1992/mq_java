@@ -1,4 +1,4 @@
-package NSR.Structs;
+package NSRStructs;
 
 import java.util.HashMap;
 import java.util.Map;

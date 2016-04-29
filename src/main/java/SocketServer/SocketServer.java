@@ -89,6 +89,7 @@ public  class SocketServer {
         ToCommandServer(Socket connection,CommandServer commandServer) {
             this.connection = connection;
             this.commandServer = commandServer;
+            commandServer.setConnect(connection);
         }
 
         public void run() {

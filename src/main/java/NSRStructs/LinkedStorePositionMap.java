@@ -1,4 +1,4 @@
-package NSR.Structs;
+package NSRStructs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ public class LinkedStorePositionMap {
 
     Object locks[] = new Object[KEY_NUMBER];
 
-    LinkedStorePositionMap () {
+    public LinkedStorePositionMap () {
         queuePosition = new HashMap<String, PositionBlock>();
     }
 

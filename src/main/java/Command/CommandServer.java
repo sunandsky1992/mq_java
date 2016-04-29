@@ -1,5 +1,8 @@
 package Command;
 
+import Constant.Constant;
+
+import java.net.Socket;
 import java.util.Arrays;
 
 /**
@@ -7,6 +10,8 @@ import java.util.Arrays;
  */
 //用于解析命令的类的接口
 public abstract class CommandServer {
+    Socket connect ;
+
     public abstract void analysisCommand(byte[] command);
 
     public static int byteToInt(byte[] command, int begin, int length) {
@@ -25,5 +30,17 @@ public abstract class CommandServer {
         for (int i=0;i<length;i++) {
             command[i+position] = (byte)((value>>((length-i-1)*8)) & 0xFF);
         }
+    }
+
+    public static String getQueueName(byte[] command,int beginPosition){
+        return byteToString(command,beginPosition,Constant.QUEUE_NAME_LENGTH);
+    }
+
+    public static int getInt(byte[] command, int position) {
+        return byteToInt(command,position,Constant.INT_LENGTH);
+    }
+
+    public void setConnect(Socket connect) {
+        this.connect = connect;
     }
 }

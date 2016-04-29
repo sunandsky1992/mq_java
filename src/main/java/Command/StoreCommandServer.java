@@ -18,8 +18,6 @@ import java.util.List;
 public class StoreCommandServer extends CommandServer {
     int position;
 
-    Socket connect ;
-
     StoreServer storeServer;
 
     public StoreCommandServer() {
@@ -42,10 +40,6 @@ public class StoreCommandServer extends CommandServer {
             long length = getQueueLength(command);
             sendQueueLength((int)length);
         }
-    }
-
-    public void setConnect(Socket connect) {
-        this.connect = connect;
     }
 
     private ReadCommand getReadQueue(byte[] command) {
