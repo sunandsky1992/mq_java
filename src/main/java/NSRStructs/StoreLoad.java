@@ -12,7 +12,7 @@ public class StoreLoad {
     private double memoryUsed;
     private double networdWidthUsed;
 
-    StoreLoad(String ipAddr, int port) {
+    public StoreLoad(String ipAddr, int port) {
         this.ipAddr = ipAddr;
         this.port = port;
         this.storeId = ipAddr+":"+port;

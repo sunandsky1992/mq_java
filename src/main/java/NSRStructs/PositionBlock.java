@@ -11,13 +11,12 @@ public class PositionBlock {
     private String addr;
     private int port;
 
-
-    PositionBlock(String addr, int port,int queueNumber,String queueName) {
+    public PositionBlock(String addr, int port, int queueNumber, String queueName) {
         this.queueName = queueName;
         this.addr = addr;
         this.port = port;
         this.queueNumber = queueNumber;
-        this.queueId = addr+":"+port+queueNumber;
+        this.queueId = queueName+queueNumber;
         next = null;
     }
 

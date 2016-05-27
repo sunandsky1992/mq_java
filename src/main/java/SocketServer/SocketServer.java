@@ -96,7 +96,6 @@ public  class SocketServer {
             try {
                 InputStream in = connection.getInputStream();
                 byte[] firstTwoByte = new byte[Constant.TOTAL_LENGTH];
-
                 while (in.read(firstTwoByte, 0, 2)==2) {
                     int commandLength = (firstTwoByte[0] << 8) + firstTwoByte[1];
                     System.out.println("commandLength: " + commandLength);

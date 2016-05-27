@@ -15,6 +15,8 @@ public class LinkedStorePositionMap {
     Object locks[] = new Object[KEY_NUMBER];
 
     public LinkedStorePositionMap () {
+        for (int i=0;i<KEY_NUMBER;i++)
+            locks[i] = new Object();
         queuePosition = new HashMap<String, PositionBlock>();
     }
 
@@ -55,6 +57,24 @@ public class LinkedStorePositionMap {
         }
     }
 
+    public PositionBlock getInsertPosition(String queueName) {
+        PositionBlock positionBlock = queuePosition.get(queueName);
+        if (positionBlock == null)
+            return null;
+        while (positionBlock.getNext()!=null) {
+            positionBlock = positionBlock.getNext();
+        }
+        return positionBlock;
+    }
+
+    public PositionBlock getNextReadPosition(String queueName) {
+        PositionBlock positionBlock = queuePosition.get(queueName);
+        if (positionBlock == null)
+            return null;
+        PositionBlock positionBlock2 = positionBlock.getNext();
+        queuePosition.put(queueName,positionBlock2);
+        return positionBlock2;
+    }
 
     int calculateQueueNameHash(String queueName) {
         int l = queueName.length();

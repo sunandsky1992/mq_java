@@ -1,23 +1,50 @@
 package NSRServer;
 
-import NSRStructs.PositionBlock;
-import NSRStructs.StoreLoad;
+import NSRStructs.*;
+
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ss on 16-4-26.
  */
-public interface NSRServer {
-    void updateInsertMap(String queueId);
+public abstract class NSRServer {
+    static HashInsertPositionMap hashInsertPositionMap = new HashInsertPositionMap();
 
-    void updateReadMap(String queueId);
+    static LinkedStorePositionMap linkedStorePositionMap = new LinkedStorePositionMap();
 
-    void updateLoadMap(String storeId, StoreLoad storeLoad);
+    static HashStoreLoadMap hashStoreLoadMap = new HashStoreLoadMap();
 
-    PositionBlock getCurrentInsertMap(String queueId);
+    static Map<String,Socket> connectMap = new HashMap<String,Socket>();
 
-    PositionBlock getCurrentReadMap(String queueId);
+    public abstract void updateReadMap(String name, String addr, int port);
 
-    void synInsertMap();
+    public abstract void updateLoadMap(StoreLoad storeLoad);
 
-    void synReadMap();
+    public abstract PositionBlock getCurrentInsertMap(String queueName);
+
+    public abstract PositionBlock getCurrentReadMap(String queueName);
+
+    public abstract PositionBlock getNextPosition(String queueName);
+
+    public abstract PositionBlock getInsertPosition(String queueName);
+
+    public HashInsertPositionMap getHashInsertPositionMap() {
+        return hashInsertPositionMap;
+    }
+
+    public HashStoreLoadMap getHashStoreLoadMap() {
+        return hashStoreLoadMap;
+    }
+
+    public LinkedStorePositionMap getLinkedStorePositionMap() {
+        return linkedStorePositionMap;
+    }
+
+    public Map<String, Socket> getConnectMap() {
+        return connectMap;
+    }
+
+
 }

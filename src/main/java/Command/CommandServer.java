@@ -32,8 +32,12 @@ public abstract class CommandServer {
         }
     }
 
-    public static String getQueueName(byte[] command,int beginPosition){
-        return byteToString(command,beginPosition,Constant.QUEUE_NAME_LENGTH);
+    public static void insertStringToBytes(byte[] command, String value, int length,int position) {
+        System.arraycopy(value.getBytes(),0,command,position,value.length());
+    }
+
+    public static String getQueueName(byte[] command,int beginPosition,int queueLength){
+        return byteToString(command,beginPosition,queueLength);
     }
 
     public static int getInt(byte[] command, int position) {

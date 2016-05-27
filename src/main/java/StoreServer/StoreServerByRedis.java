@@ -76,8 +76,10 @@ public class StoreServerByRedis implements StoreServer{
         return res;
     }
 
+
+
     public static void main(String args[]){
-        SocketServer server = new SocketServer("localhost",8000,Constant.STORE_COMMAND_SERVER,"storeTest");
+        SocketServer server = new SocketServer("localhost",8001,Constant.STORE_COMMAND_SERVER,"storeTest");
         server.listen();
     }
 }
