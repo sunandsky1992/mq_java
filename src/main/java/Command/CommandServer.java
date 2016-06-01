@@ -14,10 +14,12 @@ public abstract class CommandServer {
 
     public abstract void analysisCommand(byte[] command);
 
+    public abstract void task();
+
     public static int byteToInt(byte[] command, int begin, int length) {
         int res = 0;
         for (int i = begin;i<begin+length;i++){
-            res = res << 8 | command[i];
+            res = res << 8 | command[i] & 0xFF;
         }
         return res;
     }

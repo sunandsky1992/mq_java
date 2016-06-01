@@ -1,6 +1,7 @@
 package SocketServer;
 
 import Command.CommandServer;
+import Command.FrontCommandServer;
 import Command.NSRCommandServer;
 import Command.StoreCommandServer;
 import Constant.Constant;
@@ -55,7 +56,7 @@ public  class SocketServer {
             return new NSRCommandServer();
         }
         if (type.equals(Constant.FRONT_COMMAND_SERVER)) {
-            return new StoreCommandServer();
+            return new FrontCommandServer();
         }
         return null;
     }
@@ -68,6 +69,8 @@ public  class SocketServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
         while (isRunning) {
             try {

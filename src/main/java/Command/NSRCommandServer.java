@@ -27,12 +27,14 @@ public class NSRCommandServer extends CommandServer {
             int queueLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position = position + Constant.QUEUE_NAME_LENGTH;
             String queueName = getQueueName(command, position,queueLength);
+            System.out.println(queueName+" "+queueName.length());
+
             PositionBlock positionBlock = getNextReadPosition(queueName);
             String res;
             if (positionBlock == null) {
-                res = "error,no queue exist";
+                res = "err";
             } else {
-                res = positionBlock.getAddr()+":"+positionBlock.getPort();
+                res = positionBlock.getAddr()+":"+positionBlock.getPort()+":"+positionBlock.getQueueId();
             }
             sendString(res);
 
@@ -41,9 +43,9 @@ public class NSRCommandServer extends CommandServer {
             int queueLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position = position + Constant.QUEUE_NAME_LENGTH;
             String queueName = getQueueName(command, position, queueLength);
-
+            System.out.println(queueName + " " + queueName.length());
             PositionBlock positionBlock = getInsertPosition(queueName);
-            String res = positionBlock.getAddr()+":"+positionBlock.getPort();
+            String res = positionBlock.getAddr()+":"+positionBlock.getPort()+":"+positionBlock.getQueueId();
             sendString(res);
 
         } else if ((command[0]>>5 & 0x1) == 1) {
@@ -72,6 +74,11 @@ public class NSRCommandServer extends CommandServer {
             storeLoad.setNetwordWidthUsed(IOUsed);
             updateStoreLoad(storeLoad);
         }
+    }
+
+    @Override
+    public void task() {
+
     }
 
     private void updateStoreLoad(StoreLoad storeLoad) {
@@ -103,7 +110,7 @@ public class NSRCommandServer extends CommandServer {
     }
 
     private int getQueueLength(String queueId,String queueName) {
-        int commandLength = Constant.TOTAL_LENGTH+1+Constant.QUEUE_NAME_LENGTH+queueId.length();
+        int commandLength = Constant.TOTAL_LENGTH+Constant.COMMAND_LENGTH+Constant.QUEUE_NAME_LENGTH+queueId.length();
         byte[] command = new byte[commandLength];
         int position = 0;
         insertIntToBytes(command, commandLength, Constant.TOTAL_LENGTH, position);

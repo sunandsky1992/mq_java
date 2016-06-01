@@ -42,6 +42,11 @@ public class StoreCommandServer extends CommandServer {
         }
     }
 
+    @Override
+    public void task() {
+
+    }
+
     private ReadCommand getReadQueue(byte[] command) {
             int queueNameLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position+=Constant.QUEUE_NAME_LENGTH;
@@ -94,7 +99,7 @@ public class StoreCommandServer extends CommandServer {
         }
         byte command[] = new byte[length];
         int position = 0;
-        insertIntToBytes(command,length,Constant.TOTAL_LENGTH,position);
+        insertIntToBytes(command, length, Constant.TOTAL_LENGTH, position);
         position += Constant.TOTAL_LENGTH;
         insertIntToBytes(command, messageNumber, Constant.MESSAGE_NUMBER, position);
         position +=Constant.MESSAGE_NUMBER;

@@ -26,4 +26,8 @@ public class Constant {
     public static final String STATUS_EXPAND = "status_expand";
     public static final double EXPAND_LINE = 90;
 
+    //NSR地址
+    public static final String NSR_ADDR = "127.0.0.1";
+
+    public static final int NSR_PORT = 8000;
 }
