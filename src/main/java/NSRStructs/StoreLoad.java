@@ -1,5 +1,7 @@
 package NSRStructs;
 
+import Constant.Constant;
+
 /**
  * Created by ss on 16-4-14.
  */
@@ -11,6 +13,7 @@ public class StoreLoad {
     private double cpuUsed;
     private double memoryUsed;
     private double networdWidthUsed;
+    private int[] historyRecord = new int[Constant.STORE_RECORD_LENGTH];
 
     public StoreLoad(String ipAddr, int port) {
         this.ipAddr = ipAddr;
@@ -66,4 +69,14 @@ public class StoreLoad {
     public void setNetwordWidthUsed(double networdWidthUsed) {
         this.networdWidthUsed = networdWidthUsed;
     }
+
+    public void updateHistoryRecord(int value) {
+        System.arraycopy(historyRecord,0,historyRecord,1,Constant.STORE_RECORD_LENGTH-1);
+        historyRecord[0] = value;
+    }
+
+    public int[] getHistoryRecord(){
+        return historyRecord;
+    }
+
 }

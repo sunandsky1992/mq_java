@@ -46,5 +46,6 @@ public abstract class NSRServer {
         return connectMap;
     }
 
+    public abstract StoreLoad getStoreLoad(String storeId);
 
 }

@@ -68,10 +68,16 @@ public class NSRCommandServer extends CommandServer {
             position += Constant.INT_LENGTH;
             int IOUsed = getInt(command, position);
             position += Constant.INT_LENGTH;
-            StoreLoad storeLoad = new StoreLoad(addr,port);
+            int messageNum = getInt(command,position);
+            position += Constant.INT_LENGTH;
+            String storeId = addr+":"+port;
+            StoreLoad storeLoad = nsrServer.getStoreLoad(storeId);
+            if (storeLoad == null)
+                 storeLoad = new StoreLoad(addr,port);
             storeLoad.setCpuUsed(CPUsed);
             storeLoad.setMemoryUsed(memoryUsed);
             storeLoad.setNetwordWidthUsed(IOUsed);
+            storeLoad.updateHistoryRecord(messageNum);
             updateStoreLoad(storeLoad);
         }
     }

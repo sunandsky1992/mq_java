@@ -3,7 +3,10 @@ package StoreServer;
 import Command.StoreCommandServer;
 import Constant.Constant;
 import Queue.*;
+import ScheduleTask.ScheduleTask;
+import ScheduleTask.StoreScheduleTask;
 import SocketServer.*;
+
 import redis.clients.jedis.*;
 
 import java.util.List;
@@ -79,7 +82,10 @@ public class StoreServerByRedis implements StoreServer{
 
 
     public static void main(String args[]){
+        StoreScheduleTask storeScheduleTask = new StoreScheduleTask();
+        storeScheduleTask.task();
         SocketServer server = new SocketServer("localhost",8001,Constant.STORE_COMMAND_SERVER,"storeTest");
         server.listen();
+
     }
 }

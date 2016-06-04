@@ -16,8 +16,10 @@ public class NSRServerDefault extends NSRServer {
 
     }
 
+    private static NSRServerDefault nsrServerDefault = new NSRServerDefault();
+
     public static NSRServerDefault getInstant(){
-        return new NSRServerDefault();
+        return nsrServerDefault;
     }
 
     public void updateReadMap(String name, String addr, int port) {
@@ -46,6 +48,10 @@ public class NSRServerDefault extends NSRServer {
 
     public PositionBlock getCurrentReadMap(String queueName) {
         return linkedStorePositionMap.readPosition(queueName);
+    }
+
+    public StoreLoad getStoreLoad(String storeId) {
+        return hashStoreLoadMap.getStoreMap(storeId);
     }
 
     public static void main(String args[]){

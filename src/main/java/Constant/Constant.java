@@ -28,6 +28,16 @@ public class Constant {
 
     //NSR地址
     public static final String NSR_ADDR = "127.0.0.1";
-
     public static final int NSR_PORT = 8000;
+    public static final String NATIVE_ADDR = "127.0.0.1";
+    public static final int NATIVE_PORT = 8001;
+    public static final String MODEL_NAME = "TEST1";
+
+    //
+    public static final int STORE_RECORD_LENGTH = 1000;
+    public static final int STORE_HEARTBEAT_INTERBAL = 1000;
+
+    //
+    public static final int STORE_BALANCE_LINE = 100;
+    public static final int STORE_RELEASE_LINE =10;
 }

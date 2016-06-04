@@ -8,7 +8,7 @@ import java.util.Map;
  */
 
 public class LinkedStorePositionMap {
-    Map<String, PositionBlock> queuePosition;
+    private Map<String, PositionBlock> queuePosition;
 
     int KEY_NUMBER = 1000;
 
@@ -74,6 +74,10 @@ public class LinkedStorePositionMap {
         PositionBlock positionBlock2 = positionBlock.getNext();
         queuePosition.put(queueName,positionBlock2);
         return positionBlock2;
+    }
+
+    public Map<String, PositionBlock> getQueuePosition(){
+        return queuePosition;
     }
 
     int calculateQueueNameHash(String queueName) {
