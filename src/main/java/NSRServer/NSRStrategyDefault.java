@@ -20,8 +20,9 @@ public class NSRStrategyDefault {
         List<StoreLoad> storeLoads = getSortedStoreLoadByMessageNum(storeLoadMap);
         List<StoreLoad> releaseStoreLoad = getSortedStoreLoadByMessageNum(storeLoadMap).subList(0, releaseNum);
         List<StoreLoad> balanceStoreLoad = new ArrayList<StoreLoad>();
-        List<StoreLoad> idleStoreLoad    = new ArrayList<StoreLoad>();
+        List<StoreLoad> idleStoreLoads    = new ArrayList<StoreLoad>();
         //idle转移一部分 根据到平均值的差来根据概率转移队列
+        int totalIdleLoad = 0;
         for (StoreLoad storeLoad:storeLoads) {
             if (releaseStoreLoad.contains(storeLoad)) {
                 continue;
@@ -34,9 +35,11 @@ public class NSRStrategyDefault {
             } else if (storeLoad.getHistoryRecord()[0]<Constant.STORE_BALANCE_LINE &&
                     storeLoad.getHistoryRecord()[1]<Constant.STORE_BALANCE_LINE &&
                     storeLoad.getHistoryRecord()[2]<Constant.STORE_BALANCE_LINE) {
-                idleStoreLoad.add(storeLoad);
+                totalIdleLoad += storeLoad.getHistoryRecord()[0];
+                idleStoreLoads.add(storeLoad);
             }
         }
+
 
 
         Set<Entry<String,PositionBlock>> positionBlocks =
@@ -44,13 +47,23 @@ public class NSRStrategyDefault {
         for (Entry<String,PositionBlock> entry:positionBlocks) {
             String storeId = entry.getValue().getAddr()+":"+entry.getValue().getPort();
             StoreLoad storeLoad = storeLoadMap.get(storeId);
-            if (storeLoad.getHistoryRecord()[0]>Constant.STORE_BALANCE_LINE &&
+            if ((storeLoad.getHistoryRecord()[0]>Constant.STORE_BALANCE_LINE &&
                     storeLoad.getHistoryRecord()[1]>Constant.STORE_BALANCE_LINE &&
-                    storeLoad.getHistoryRecord()[2]>Constant.STORE_BALANCE_LINE) {
-
+                    storeLoad.getHistoryRecord()[2]>Constant.STORE_BALANCE_LINE )|| releaseStoreLoad.contains(storeLoad) ) {
+                int m1 = storeLoad.getHistoryRecord()[0]*100/(Constant.STORE_BALANCE_LINE*4 + storeLoad.getHistoryRecord()[0]);
+                if (releaseStoreLoad.contains(storeLoad))
+                    m1 *= 100;
+                for (StoreLoad idleStoreLoad:idleStoreLoads) {
+                    int g = idleStoreLoad.getHistoryRecord()[0]*m1/totalIdleLoad;
+                    int r = new Random().nextInt(100);
+                    if (r<g) {
+                        linkedStorePositionMap.insertPosition(entry.getValue().getQueueName()
+                                ,idleStoreLoad.getIpAddr(),idleStoreLoad.getPort());
+                        break;
+                    }
+                }
             }
         }
-
     }
 
     public int getReleaseNumByMemory(Map<String,StoreLoad> storeLoadMap) {
