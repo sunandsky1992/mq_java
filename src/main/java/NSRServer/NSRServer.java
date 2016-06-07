@@ -10,11 +10,11 @@ import java.util.Map;
  * Created by ss on 16-4-26.
  */
 public abstract class NSRServer {
-    static HashInsertPositionMap hashInsertPositionMap = new HashInsertPositionMap();
+    static HashInsertPositionMap hashInsertPositionMap = HashInsertPositionMap.getHashInsertPosition();
 
-    static LinkedStorePositionMap linkedStorePositionMap = new LinkedStorePositionMap();
+    static LinkedStorePositionMap linkedStorePositionMap = LinkedStorePositionMap.getLinkedStorePositionMap();
 
-    static HashStoreLoadMap hashStoreLoadMap = new HashStoreLoadMap();
+    static HashStoreLoadMap hashStoreLoadMap = HashStoreLoadMap.getHashStoreLoadMap();
 
     static Map<String,Socket> connectMap = new HashMap<String,Socket>();
 

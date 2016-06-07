@@ -20,6 +20,8 @@ public class StoreCommandServer extends CommandServer {
 
     StoreServer storeServer;
 
+    StoreHistoryInfo storeHistoryInfo = StoreHistoryInfo.getStoreHistoryInfo();
+
     public StoreCommandServer() {
         this.storeServer = new StoreServerByRedis();
     }
@@ -29,11 +31,13 @@ public class StoreCommandServer extends CommandServer {
         if ((command[0]>>7&0x1) ==1) {
             System.out.println("insert queue" + command);
             Queue queue = getInsertQueue(command);
+            storeHistoryInfo.getAndaddRecord(queue.getMessages().size());
             insertMessage(queue);
         } else if ((command[0]>>6 & 0x1)  == 1) {
             ReadCommand readCommand = getReadQueue(command);
             System.out.println("read queue" + command);
             Queue queue = readMessage(readCommand);
+            storeHistoryInfo.getAndaddRecord(queue.getMessages().size());
             sendMessage(queue);
         } else if ((command[0]>>5 & 0x1) == 1) {
             System.out.println("read queue length" + command);

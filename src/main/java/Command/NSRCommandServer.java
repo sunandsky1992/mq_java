@@ -49,7 +49,7 @@ public class NSRCommandServer extends CommandServer {
             sendString(res);
 
         } else if ((command[0]>>5 & 0x1) == 1) {
-            System.out.println("heart beat " + command);
+            //System.out.println("heart beat " + command);
             int queueLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position = position + Constant.QUEUE_NAME_LENGTH;
             String storeName = getQueueName(command, position, queueLength);

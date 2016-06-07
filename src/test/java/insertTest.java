@@ -12,9 +12,9 @@ import java.util.Date;
  */
 public class insertTest {
     @Test
-    public void test() throws IOException {
+    public void test() throws IOException, InterruptedException {
         Socket socket = new Socket();
-        InetSocketAddress address = new InetSocketAddress("localhost", 8002);
+        InetSocketAddress address = new InetSocketAddress("localhost", 8200);
         socket.connect(address);
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
@@ -26,9 +26,10 @@ public class insertTest {
             byte command[] = {0, 13, -128, 1, 97, 0, 2, 0, 1, 97, 0, 1, 97};
             out.write(command);
             out.flush();
-            if (num%1000==0) {
+            //if (num%1000==0) {
                 System.out.println(num+" "+new Date());
-            }
+          //  }
+            Thread.sleep(60);
         }
     }
 

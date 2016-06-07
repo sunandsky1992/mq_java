@@ -8,16 +8,26 @@ import java.util.Map;
  */
 
 public class LinkedStorePositionMap {
-    private Map<String, PositionBlock> queuePosition;
+    private static LinkedStorePositionMap linkedStorePositionMap = new LinkedStorePositionMap();
 
-    int KEY_NUMBER = 1000;
+    private Map<String, PositionBlock> queuePosition = new HashMap<String, PositionBlock>();
 
-    Object locks[] = new Object[KEY_NUMBER];
 
-    public LinkedStorePositionMap () {
+    static int  KEY_NUMBER = 1000;
+
+    static Object locks[] = new Object[KEY_NUMBER];
+
+    static {
         for (int i=0;i<KEY_NUMBER;i++)
             locks[i] = new Object();
-        queuePosition = new HashMap<String, PositionBlock>();
+    }
+
+    private LinkedStorePositionMap(){
+
+    }
+
+    public static LinkedStorePositionMap getLinkedStorePositionMap(){
+        return linkedStorePositionMap;
     }
 
     public void deletePosition(String queueName) {

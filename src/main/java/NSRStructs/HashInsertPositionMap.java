@@ -9,6 +9,15 @@ import java.util.Map;
 public class HashInsertPositionMap {
     Map<String, PositionBlock> insertMap = new HashMap<String,PositionBlock>();
 
+    private static HashInsertPositionMap hashInsertPositionMap = new HashInsertPositionMap();
+
+    private HashInsertPositionMap() {
+
+    }
+
+    public static HashInsertPositionMap getHashInsertPosition() {
+        return hashInsertPositionMap;
+    }
     public Map<String,PositionBlock> getStoreLoadMap(){
         return insertMap;
     }

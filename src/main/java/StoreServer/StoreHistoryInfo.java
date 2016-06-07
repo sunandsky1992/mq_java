@@ -30,6 +30,9 @@ public class StoreHistoryInfo {
         return getAndSetRecord(0);
     }
 
+    public int getAndaddRecord(int value) {
+        return currentNum.addAndGet(value);
+    }
     public int getAndSetRecord(int value) {
         return currentNum.getAndSet(value);
     }

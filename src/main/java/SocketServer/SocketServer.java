@@ -101,7 +101,7 @@ public  class SocketServer {
                 byte[] firstTwoByte = new byte[Constant.TOTAL_LENGTH];
                 while (in.read(firstTwoByte, 0, 2)==2) {
                     int commandLength = (firstTwoByte[0] << 8) + firstTwoByte[1];
-                    System.out.println("commandLength: " + commandLength);
+                  //  System.out.println("commandLength: " + commandLength);
                     byte command[] = new byte[commandLength];
                     int res = in.read(command, 0, commandLength-Constant.TOTAL_LENGTH);
                     commandServer.analysisCommand(command);

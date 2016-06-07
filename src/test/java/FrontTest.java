@@ -17,7 +17,7 @@ public class FrontTest {
     @Test
     public void test() throws IOException {
         Socket socket = new Socket();
-        InetSocketAddress address = new InetSocketAddress("localhost", 8002);
+        InetSocketAddress address = new InetSocketAddress("localhost", 8200);
         socket.connect(address);
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();

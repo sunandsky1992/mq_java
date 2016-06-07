@@ -41,7 +41,7 @@ public  class FrontServer {
     }
 
     public static void main(String args[]) {
-        SocketServer server = new SocketServer("localhost",8002, Constant.FRONT_COMMAND_SERVER,"storeTest");
+        SocketServer server = new SocketServer("localhost",8200, Constant.FRONT_COMMAND_SERVER,"storeTest");
         server.listen();
 
     }

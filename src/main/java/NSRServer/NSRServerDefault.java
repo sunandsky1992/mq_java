@@ -2,6 +2,7 @@ package NSRServer;
 
 import Constant.Constant;
 import NSRStructs.*;
+import ScheduleTask.NSRScheduleTask;
 import SocketServer.SocketServer;
 
 import java.net.Socket;
@@ -55,7 +56,11 @@ public class NSRServerDefault extends NSRServer {
     }
 
     public static void main(String args[]){
+
+        NSRScheduleTask task = new NSRScheduleTask();
+        task.task();
         SocketServer server = new SocketServer("localhost",8000, Constant.NSR_COMMAND_SERVER,"storeTest");
+
         server.listen();
     }
 }

@@ -17,6 +17,8 @@ import java.util.List;
 public class StoreServerByRedis implements StoreServer{
     String serverId;
 
+    private static StoreHistoryInfo storeHistoryInfo = StoreHistoryInfo.getStoreHistoryInfo();
+
     private static JedisPool jedisPool;
 
     private static int MAX_ACTIVE = 1024;

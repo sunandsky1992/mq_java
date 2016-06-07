@@ -7,11 +7,21 @@ import java.util.Map;
  * Created by ss on 16-4-14.
  */
 public class HashStoreLoadMap {
+    private static HashStoreLoadMap hashStoreLoadMap = new HashStoreLoadMap();
+
     private Map<String, StoreLoad> storeLoadMap = new HashMap<String,StoreLoad>();
 
     private int total = 0;
 
     private int used = 0;
+
+    public static HashStoreLoadMap getHashStoreLoadMap() {
+        return hashStoreLoadMap;
+    }
+
+    private HashStoreLoadMap() {
+
+    }
 
     public Map<String,StoreLoad> getStoreLoadMap(){
         return storeLoadMap;

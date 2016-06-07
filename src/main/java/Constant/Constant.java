@@ -20,7 +20,7 @@ public class Constant {
 
     //各种类型的资源状态
     public static final String STATUS_RELEASE = "status_release";
-    public static final double RELEASE_LINE = 50;
+    public static final double RELEASE_LINE = 20;
     public static final String STATUS_NORMAL = "status_normal";
     public static final double NORMAL_LINE = 70;
     public static final String STATUS_EXPAND = "status_expand";
@@ -38,6 +38,6 @@ public class Constant {
     public static final int STORE_HEARTBEAT_INTERBAL = 1000;
 
     //
-    public static final int STORE_BALANCE_LINE = 100;
+    public static final int STORE_BALANCE_LINE = 40;
     public static final int STORE_RELEASE_LINE =10;
 }
