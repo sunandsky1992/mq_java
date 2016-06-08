@@ -5,6 +5,7 @@ import NSRStructs.*;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -81,14 +82,10 @@ public class NSRStrategyDefault {
         }
 
         for (String s:NSRServer.getFrontAddr()) {
-
             String[] strs = s.split(":");
             String addr = strs[0];
             int port = Integer.parseInt(strs[1]);
-            Socket socket = new Socket();
-            InetSocketAddress address = new InetSocketAddress(Constant.NSR_ADDR,Constant.NSR_PORT);
-            socket.connect(address);
-            OutputStream out = socket.getOutputStream();
+            sendSynToFront(addr,port,updatePositions);
         }
 
         System.out.println("===============================================");
@@ -111,8 +108,22 @@ public class NSRStrategyDefault {
 
     }
 
-    public static void sendSynToFront(String addr, int port, List<PositionBlock> updatePositions) {
-
+    public static void sendSynToFront(String addr, int port, List<PositionBlock> updatePositions) throws IOException {
+        Socket socket = new Socket();
+        InetSocketAddress address = new InetSocketAddress(addr,port);
+        socket.connect(address);
+        OutputStream out = socket.getOutputStream();
+        int totalLength = Constant.TOTAL_LENGTH + Constant.COMMAND_LENGTH + +Constant.INT_LENGTH;
+        for (int i=0;i<updatePositions.size();i++) {
+            totalLength+=Constant.QUEUE_NAME_LENGTH;
+            totalLength+=updatePositions.get(i).getQueueName().length();
+            String temAddr = updatePositions.get(i).getAddr();
+            int temPort = updatePositions.get(i).getPort();
+            String sendStr = temAddr+":"+temPort;
+            totalLength+=Constant.INT_LENGTH;
+            totalLength+=sendStr.length();
+            totalLength+=Constant.TIMESTAMP_LENGTH;
+        }
     }
 
     public static int getReleaseNumByMemory(Map<String,StoreLoad> storeLoadMap) {
