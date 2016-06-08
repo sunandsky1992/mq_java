@@ -24,11 +24,25 @@ public abstract class CommandServer {
         return res;
     }
 
+    public static long byteToLong(byte[] command, int begin, int length) {
+        int res = 0;
+        for (int i = begin;i<begin+length;i++){
+            res = res << 8 | command[i] & 0xFF;
+        }
+        return res;
+    }
+
     public static String byteToString(byte[] command, int begin, int length) {
         return new String (Arrays.copyOfRange(command, begin, begin+length));
     }
 
     public static void insertIntToBytes(byte[] command, int value, int length,int position) {
+        for (int i=0;i<length;i++) {
+            command[i+position] = (byte)((value>>((length-i-1)*8)) & 0xFF);
+        }
+    }
+
+    public static void insertIntToBytes(byte[] command, long value, int length,int position) {
         for (int i=0;i<length;i++) {
             command[i+position] = (byte)((value>>((length-i-1)*8)) & 0xFF);
         }

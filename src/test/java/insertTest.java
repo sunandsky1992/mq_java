@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -35,8 +36,7 @@ public class insertTest {
 
     @Test
     public void test2() {
-        int a = 4 << 8;
-        a = a|((byte)1);
-        System.out.println(a);
+        Timestamp timestamp = new Timestamp(1411000000000l);
+        System.out.println(timestamp);
     }
 }

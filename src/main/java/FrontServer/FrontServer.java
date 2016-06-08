@@ -1,6 +1,7 @@
 package FrontServer;
 
 import Constant.Constant;
+import ScheduleTask.FrontScheduleTask;
 import FrontStructs.PositionBlock;
 import SocketServer.SocketServer;
 
@@ -13,6 +14,15 @@ import java.util.Map;
 public  class FrontServer {
     Map<String,PositionBlock> insertMap = new HashMap<String,PositionBlock>();
     Map<String,PositionBlock> readMap = new HashMap<String, PositionBlock>();
+
+    private static FrontServer frontServer = new FrontServer();
+
+    private FrontServer() {
+    }
+
+    public static FrontServer getFrontServer(){
+        return frontServer;
+    }
 
     public void putInsertMap(String queueName, String addr, int port,String queueId){
         PositionBlock positionBlock = new PositionBlock(queueName,addr,port,queueId);
@@ -41,6 +51,8 @@ public  class FrontServer {
     }
 
     public static void main(String args[]) {
+        FrontScheduleTask frontSchelduledTask = new FrontScheduleTask();
+        frontSchelduledTask.task();
         SocketServer server = new SocketServer("localhost",8200, Constant.FRONT_COMMAND_SERVER,"storeTest");
         server.listen();
 

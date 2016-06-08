@@ -2,6 +2,8 @@ package Command;
 
 import Constant.Constant;
 import FrontServer.FrontServer;
+import FrontStructs.FrontSchelduledTask;
+import FrontStructs.FrontSchelduledTaskUnit;
 import FrontStructs.PositionBlock;
 import Queue.Message;
 
@@ -16,13 +18,13 @@ import java.util.List;
  * Created by ss on 16-5-27.
  */
 public class FrontCommandServer extends CommandServer {
-    private static FrontServer frontServer = new FrontServer();
+    private static FrontServer frontServer = FrontServer.getFrontServer();
 
     @Override
     public void analysisCommand(byte[] command) {
         int position = 1;
         if ((command[0]>>7&0x1) ==1) {
-            System.out.println("insert message");
+          //  System.out.println("insert message");
             int queueNameLength  = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position += Constant.QUEUE_NAME_LENGTH;
             String queueName = getQueueName(command, position, queueNameLength);
@@ -51,6 +53,35 @@ public class FrontCommandServer extends CommandServer {
             sendMessageToUser(queueName, messages);
         } else if ((command[0]>>5 & 0x1) == 1) {
 
+        } else if ((command[0]>>4 & 0x1) == 1) {
+            System.out.println("syn insert map");
+            int num = byteToInt(command,position,Constant.INT_LENGTH);
+            position+=Constant.INT_LENGTH;
+            for (int i=0;i<num;i++) {
+                int queueNameLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
+                position+=Constant.QUEUE_NAME_LENGTH;
+                String queueName = byteToString(command, position, queueNameLength);
+                position+=queueNameLength;
+                int addLength = byteToInt(command, position, Constant.INT_LENGTH);
+                position+=Constant.INT_LENGTH;
+                String addr = byteToString(command, position, addLength);
+                position+=addLength;
+                long timestamp = byteToLong(command, position, Constant.TIMESTAMP_LENGTH);
+                position+=Constant.TIMESTAMP_LENGTH;
+
+                String strs[] = addr.split(":");
+                String address = strs[0];
+                int port = Integer.parseInt(strs[1]);
+                String queueId = strs[2];
+
+                FrontSchelduledTaskUnit frontSchelduledTaskUnit = new FrontSchelduledTaskUnit();
+                frontSchelduledTaskUnit.setAddr(address);
+                frontSchelduledTaskUnit.setPort(port);
+                frontSchelduledTaskUnit.setQueueId(queueId);
+                frontSchelduledTaskUnit.setQueueName(queueName);
+                frontSchelduledTaskUnit.setTimestamp(timestamp);
+                FrontSchelduledTask.getFrontSchelduledTask().insert(frontSchelduledTaskUnit);
+            }
         }
     }
 

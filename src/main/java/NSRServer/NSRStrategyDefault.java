@@ -2,7 +2,12 @@ package NSRServer;
 
 import Constant.Constant;
 import NSRStructs.*;
+import org.omg.PortableInterceptor.INACTIVE;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -10,7 +15,7 @@ import java.util.Map.Entry;
  * Created by ss on 16-5-18.
  */
 public class NSRStrategyDefault {
-    public static void balance(Map<String,StoreLoad> storeLoadMap,LinkedStorePositionMap linkedStorePositionMap) {
+    public static void balance(Map<String,StoreLoad> storeLoadMap,LinkedStorePositionMap linkedStorePositionMap) throws IOException {
         int releaseNum = getReleaseNumByMessageNum(storeLoadMap);
         List<StoreLoad> storeLoads = getSortedStoreLoadByMessageNum(storeLoadMap);
         if (releaseNum > storeLoadMap.size())
@@ -46,6 +51,8 @@ public class NSRStrategyDefault {
 
         Set<Entry<String,PositionBlock>> positionBlocks =
                 linkedStorePositionMap.getQueuePosition().entrySet();
+
+        List<PositionBlock> updatePositions = new ArrayList<PositionBlock>();
         for (Entry<String,PositionBlock> entry:positionBlocks) {
             String storeId = entry.getValue().getAddr()+":"+entry.getValue().getPort();
             System.out.println("storeId "+storeId);
@@ -63,11 +70,25 @@ public class NSRStrategyDefault {
                     if (r>g) {
                         linkedStorePositionMap.insertPosition(entry.getValue().getQueueName()
                                 , idleStoreLoad.getIpAddr(), idleStoreLoad.getPort());
+                        PositionBlock positionBlock = linkedStorePositionMap.getInsertPosition(entry.getValue().getQueueName());
+                        updatePositions.add(positionBlock);
                         System.out.println("change position: "+storeLoad.getStoreId()+" ->"+idleStoreLoad.getStoreId());
+
                         break;
                     }
                 }
             }
+        }
+
+        for (String s:NSRServer.getFrontAddr()) {
+
+            String[] strs = s.split(":");
+            String addr = strs[0];
+            int port = Integer.parseInt(strs[1]);
+            Socket socket = new Socket();
+            InetSocketAddress address = new InetSocketAddress(Constant.NSR_ADDR,Constant.NSR_PORT);
+            socket.connect(address);
+            OutputStream out = socket.getOutputStream();
         }
 
         System.out.println("===============================================");
@@ -90,6 +111,9 @@ public class NSRStrategyDefault {
 
     }
 
+    public static void sendSynToFront(String addr, int port, List<PositionBlock> updatePositions) {
+
+    }
 
     public static int getReleaseNumByMemory(Map<String,StoreLoad> storeLoadMap) {
         int totalNum = storeLoadMap.size();

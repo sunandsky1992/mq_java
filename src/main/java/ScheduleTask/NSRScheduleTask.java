@@ -29,7 +29,11 @@ public class NSRScheduleTask extends ScheduleTask {
     public void balance() {
         System.out.println("balance begin");
 
-        NSRStrategyDefault.balance(HashStoreLoadMap.getHashStoreLoadMap().getStoreLoadMap(), LinkedStorePositionMap.getLinkedStorePositionMap());
+        try {
+            NSRStrategyDefault.balance(HashStoreLoadMap.getHashStoreLoadMap().getStoreLoadMap(), LinkedStorePositionMap.getLinkedStorePositionMap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void main(String args[]){
         NSRScheduleTask task = new NSRScheduleTask();

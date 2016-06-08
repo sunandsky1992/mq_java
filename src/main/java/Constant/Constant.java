@@ -13,6 +13,8 @@ public class Constant {
     public static final int CHAR_LENGTH = 2;
     public static final int INT_LENGTH = 2;
     public static final int COMMAND_LENGTH = 1;
+    public static final int TIMESTAMP_LENGTH = 4;
+
     //各种类型commandServer
     public static final String STORE_COMMAND_SERVER = "store_command_server";
     public static final String NSR_COMMAND_SERVER = "nsr_command_server";
@@ -32,6 +34,8 @@ public class Constant {
     public static final String NATIVE_ADDR = "127.0.0.1";
     public static final int NATIVE_PORT = 8001;
     public static final String MODEL_NAME = "TEST1";
+    public static final String FRONT_ADDR = "127.0.0.1";
+    public static final int FRONT_PORT = 8200;
 
     //
     public static final int STORE_RECORD_LENGTH = 1000;

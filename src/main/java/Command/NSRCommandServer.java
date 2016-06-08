@@ -6,6 +6,7 @@ import NSRServer.NSRServerDefault;
 import NSRServer.NSRStrategyDefault;
 import NSRStructs.PositionBlock;
 import NSRStructs.StoreLoad;
+import ScheduleTask.ScheduleTask;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +50,7 @@ public class NSRCommandServer extends CommandServer {
             sendString(res);
 
         } else if ((command[0]>>5 & 0x1) == 1) {
-            //System.out.println("heart beat " + command);
+            //System.out.println("store heart beat " + command);
             int queueLength = byteToInt(command, position, Constant.QUEUE_NAME_LENGTH);
             position = position + Constant.QUEUE_NAME_LENGTH;
             String storeName = getQueueName(command, position, queueLength);
@@ -79,6 +80,13 @@ public class NSRCommandServer extends CommandServer {
             storeLoad.setNetwordWidthUsed(IOUsed);
             storeLoad.updateHistoryRecord(messageNum);
             updateStoreLoad(storeLoad);
+        } else if ((command[0]>>4 & 0x1) == 1) {
+            System.out.println("front heart beat " + command);
+            int addLength = byteToInt(command, position, Constant.MESSAGE_LENGTH);
+            position = position + Constant.MESSAGE_LENGTH;
+            String addr = byteToString(command, position, addLength);
+            position+=addLength;
+            NSRServer.getFrontAddr().add(addr);
         }
     }
 

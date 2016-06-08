@@ -4,7 +4,9 @@ import NSRStructs.*;
 
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ss on 16-4-26.
@@ -17,6 +19,8 @@ public abstract class NSRServer {
     static HashStoreLoadMap hashStoreLoadMap = HashStoreLoadMap.getHashStoreLoadMap();
 
     static Map<String,Socket> connectMap = new HashMap<String,Socket>();
+
+    static Set<String> frontAddr = new HashSet<String>();
 
     public abstract void updateReadMap(String name, String addr, int port);
 
@@ -48,4 +52,11 @@ public abstract class NSRServer {
 
     public abstract StoreLoad getStoreLoad(String storeId);
 
+    public static Set<String> getFrontAddr() {
+        return frontAddr;
+    }
+
+    public static void setFrontAddr(Set<String> frontAddr) {
+        NSRServer.frontAddr = frontAddr;
+    }
 }
