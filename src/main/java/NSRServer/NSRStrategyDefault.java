@@ -12,6 +12,9 @@ import java.net.Socket;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static Command.CommandServer.*;
+import static Command.CommandServer.insertIntToBytes;
+
 /**
  * Created by ss on 16-5-18.
  */
@@ -113,7 +116,7 @@ public class NSRStrategyDefault {
         InetSocketAddress address = new InetSocketAddress(addr,port);
         socket.connect(address);
         OutputStream out = socket.getOutputStream();
-        int totalLength = Constant.TOTAL_LENGTH + Constant.COMMAND_LENGTH + +Constant.INT_LENGTH;
+        int totalLength = Constant.TOTAL_LENGTH + Constant.COMMAND_LENGTH + Constant.INT_LENGTH;
         for (int i=0;i<updatePositions.size();i++) {
             totalLength+=Constant.QUEUE_NAME_LENGTH;
             totalLength+=updatePositions.get(i).getQueueName().length();
@@ -124,6 +127,36 @@ public class NSRStrategyDefault {
             totalLength+=sendStr.length();
             totalLength+=Constant.TIMESTAMP_LENGTH;
         }
+
+        byte[] command = new byte[totalLength];
+        int position = 0;
+        insertIntToBytes(command,totalLength,Constant.TOTAL_LENGTH,position);
+        position += Constant.TOTAL_LENGTH;
+        insertIntToBytes(command,16,Constant.COMMAND_LENGTH,position);
+        position += Constant.COMMAND_LENGTH;
+        insertIntToBytes(command,updatePositions.size(),Constant.INT_LENGTH,position);
+        position += Constant.INT_LENGTH;
+        for (PositionBlock positionBlock:updatePositions) {
+            String temAddr = positionBlock.getAddr();
+            int temPort = positionBlock.getPort();
+            String sendStr = temAddr+":"+temPort;
+            String queueName = positionBlock.getQueueName();
+            long timestamp = new Date().getTime();
+            insertIntToBytes(command,queueName.length(),Constant.INT_LENGTH, position);
+            position += Constant.INT_LENGTH;
+            insertStringToBytes(command,queueName,queueName.length(),position);
+            position += queueName.length();
+            insertIntToBytes(command,sendStr.length(),Constant.INT_LENGTH,position);
+            position +=Constant.INT_LENGTH;
+            insertStringToBytes(command,sendStr,sendStr.length(),position);
+            position += sendStr.length();
+            insertIntToBytes(command,timestamp/100*100+2000,Constant.TIMESTAMP_LENGTH,position);
+            position += Constant.TIMESTAMP_LENGTH;
+        }
+
+        out.write(command);
+        out.flush();
+        socket.close();
     }
 
     public static int getReleaseNumByMemory(Map<String,StoreLoad> storeLoadMap) {

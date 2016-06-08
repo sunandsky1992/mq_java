@@ -2,7 +2,6 @@ package ScheduleTask;
 
 import Constant.Constant;
 import StoreServer.StoreHistoryInfo;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +11,8 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static Command.CommandServer.*;
 import static Command.CommandServer.insertIntToBytes;
+import static Command.CommandServer.insertStringToBytes;
 
 /**
  * Created by ss on 16-6-1.
