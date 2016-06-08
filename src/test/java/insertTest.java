@@ -24,7 +24,7 @@ public class insertTest {
             num ++;
             byte[] res;
             int length;
-            byte command[] = {0, 13, -128, 1, 97, 0, 2, 0, 1, 97, 0, 1, 97};
+            byte command[] = {0, 13, -128, 1, 98, 0, 2, 0, 1, 97, 0, 1, 97};
             out.write(command);
             out.flush();
             //if (num%1000==0) {

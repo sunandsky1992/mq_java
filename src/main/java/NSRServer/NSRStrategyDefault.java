@@ -122,7 +122,8 @@ public class NSRStrategyDefault {
             totalLength+=updatePositions.get(i).getQueueName().length();
             String temAddr = updatePositions.get(i).getAddr();
             int temPort = updatePositions.get(i).getPort();
-            String sendStr = temAddr+":"+temPort;
+            String queueId = updatePositions.get(i).getQueueId();
+            String sendStr = temAddr+":"+temPort+":"+queueId;
             totalLength+=Constant.INT_LENGTH;
             totalLength+=sendStr.length();
             totalLength+=Constant.TIMESTAMP_LENGTH;
@@ -139,11 +140,12 @@ public class NSRStrategyDefault {
         for (PositionBlock positionBlock:updatePositions) {
             String temAddr = positionBlock.getAddr();
             int temPort = positionBlock.getPort();
-            String sendStr = temAddr+":"+temPort;
+            String queueId = positionBlock.getQueueId();
+            String sendStr = temAddr+":"+temPort+":"+queueId;
             String queueName = positionBlock.getQueueName();
             long timestamp = new Date().getTime();
-            insertIntToBytes(command,queueName.length(),Constant.INT_LENGTH, position);
-            position += Constant.INT_LENGTH;
+            insertIntToBytes(command,queueName.length(),Constant.QUEUE_NAME_LENGTH, position);
+            position += Constant.QUEUE_NAME_LENGTH;
             insertStringToBytes(command,queueName,queueName.length(),position);
             position += queueName.length();
             insertIntToBytes(command,sendStr.length(),Constant.INT_LENGTH,position);
