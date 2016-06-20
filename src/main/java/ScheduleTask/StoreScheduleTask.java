@@ -2,6 +2,8 @@ package ScheduleTask;
 
 import Constant.Constant;
 import StoreServer.StoreHistoryInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +20,7 @@ import static Command.CommandServer.insertStringToBytes;
  * Created by ss on 16-6-1.
  */
 public class StoreScheduleTask extends ScheduleTask{
-
+    private static final Logger logger = LogManager.getLogger("StoreScheduleTask");
     @Override
     public void task() {
         System.out.println("HeartBeat begin");
@@ -81,5 +83,16 @@ public class StoreScheduleTask extends ScheduleTask{
         out.write(command);
         out.flush();
         socket.close();
+
+        int[] t = StoreHistoryInfo.getStoreHistoryInfo().getArr();
+
+      //  /home/ss/workspace/mq_java/log4j.properties
+
+        logger.trace("");
+        logger.error("===============================");
+        logger.debug(t[0]+" " +t[1]+" "+t[2]);
+        logger.info("===============================");
+        logger.info("");
+
     }
 }

@@ -81,7 +81,7 @@ public class NSRCommandServer extends CommandServer {
             storeLoad.updateHistoryRecord(messageNum);
             updateStoreLoad(storeLoad);
         } else if ((command[0]>>4 & 0x1) == 1) {
-            System.out.println("front heart beat " + command);
+//            System.out.println("front heart beat " + command);
             int addLength = byteToInt(command, position, Constant.MESSAGE_LENGTH);
             position = position + Constant.MESSAGE_LENGTH;
             String addr = byteToString(command, position, addLength);

@@ -217,15 +217,15 @@ public class NSRStrategyDefault {
         //TODO map排序怎么办
 
         for (Entry<String,StoreLoad> entry:storeLoadMap.entrySet()) {
-            double memoryUsed = entry.getValue().getMemoryUsed();
-            totalUsed+=memoryUsed;
+            double queueUsed = entry.getValue().getHistoryRecord()[0];
+            totalUsed+=queueUsed;
         }
         double avg = totalUsed/totalNum;
         if (avg<Constant.RELEASE_LINE) {
             int releaseNum = (int) (totalUsed/Constant.RELEASE_LINE);
-            return getStoreLoadByMemorySort(storeLoadMap,releaseNum);
+            return getStoreLoadByMessageNumSort(storeLoadMap, releaseNum);
         } else {
-            return getStoreLoadByMemorySort(storeLoadMap,0);
+            return getStoreLoadByMessageNumSort(storeLoadMap,0);
         }
     }
 
@@ -293,7 +293,7 @@ public class NSRStrategyDefault {
         public int compare(StoreLoad t1, StoreLoad t2) {
             if (t1.getHistoryRecord()[0] == t2.getHistoryRecord()[0])
                 return 0;
-            else if (t1.getMemoryUsed()>t2.getMemoryUsed())
+            else if (t1.getHistoryRecord()[0]>t2.getHistoryRecord()[0])
                 return 1;
             else return -1;
         }

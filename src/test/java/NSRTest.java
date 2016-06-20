@@ -16,7 +16,7 @@ import static Command.CommandServer.byteToString;
 //127.0.0.1  49,50,55,46,48,46,48,46,49
 //8001 31 65
 public class NSRTest {
-    @Test
+
     public void test() throws IOException, InterruptedException {
 
         Socket socket = new Socket();
@@ -55,5 +55,8 @@ public class NSRTest {
         System.out.println(res2);
         socket.close();
     }
+    @Test
+    public void test2(){
 
+    }
 }

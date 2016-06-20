@@ -27,9 +27,9 @@ public class StoreServerByRedis implements StoreServer{
 
     private static int MAX_WAIT = 10000;
 
-    private static String ADDR = "127.0.0.1";
+    private static String ADDR = Constant.REDIS_ADDR;
 
-    private static int PORT =  6379;
+    private static int PORT =  Constant.REDIS_PORT;
 
     public StoreServerByRedis(){
         this.serverId = "storeServer";
@@ -86,7 +86,7 @@ public class StoreServerByRedis implements StoreServer{
     public static void main(String args[]){
         StoreScheduleTask storeScheduleTask = new StoreScheduleTask();
         storeScheduleTask.task();
-        SocketServer server = new SocketServer("localhost",8001,Constant.STORE_COMMAND_SERVER,"storeTest");
+        SocketServer server = new SocketServer(Constant.NATIVE_ADDR,Constant.NATIVE_PORT,Constant.STORE_COMMAND_SERVER,"storeTest");
         server.listen();
 
     }

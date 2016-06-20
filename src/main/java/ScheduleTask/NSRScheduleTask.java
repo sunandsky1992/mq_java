@@ -3,6 +3,7 @@ package ScheduleTask;
 import NSRServer.NSRStrategyDefault;
 import NSRStructs.HashStoreLoadMap;
 import NSRStructs.LinkedStorePositionMap;
+import sun.org.mozilla.javascript.Synchronizer;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -28,11 +29,12 @@ public class NSRScheduleTask extends ScheduleTask {
 
     public void balance() {
         System.out.println("balance begin");
-
-        try {
-            NSRStrategyDefault.balance(HashStoreLoadMap.getHashStoreLoadMap().getStoreLoadMap(), LinkedStorePositionMap.getLinkedStorePositionMap());
-        } catch (IOException e) {
-            e.printStackTrace();
+        synchronized (HashStoreLoadMap.getHashStoreLoadMap().getStoreLoadMap()) {
+            try {
+                NSRStrategyDefault.balance(HashStoreLoadMap.getHashStoreLoadMap().getStoreLoadMap(), LinkedStorePositionMap.getLinkedStorePositionMap());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public static void main(String args[]){

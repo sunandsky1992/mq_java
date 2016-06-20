@@ -40,4 +40,9 @@ public class StoreHistoryInfo {
     public void addCurrentNum(){
         currentNum.addAndGet(1);
     }
+
+
+    public int[] getArr() {
+        return array;
+    }
 }

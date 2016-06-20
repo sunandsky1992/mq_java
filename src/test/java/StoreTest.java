@@ -8,8 +8,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import static Command.CommandServer.byteToInt;
-import static Command.CommandServer.byteToString;
+import static Command.CommandServer.*;
+import static Command.CommandServer.insertIntToBytes;
+import static Command.CommandServer.insertStringToBytes;
 
 /**
  * Created by ss on 16-4-18.
@@ -18,15 +19,47 @@ public class StoreTest {
     @Test
     public void test() throws IOException, InterruptedException {
         Socket socket = new Socket();
-        InetSocketAddress address = new InetSocketAddress("localhost",8001);
+        InetSocketAddress address = new InetSocketAddress("localhost",8111);
         socket.connect(address);
         OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
         byte res[] = new byte[2];
-        int length;
-        byte[] command = {0,10,(byte)128,1,97,0,1,0,1,97};
-        out.write(command);
-        out.flush();
+        String queueName = "a";
+        String message = "";
+        for (int i=0;i<10240;i++)
+            message+="a";
+        int messageNum = 1;
+
+        while (true) {
+            int length = 0;
+            length = Constant.TOTAL_LENGTH + Constant.COMMAND_LENGTH + Constant.QUEUE_NAME_LENGTH
+                    + queueName.length() + Constant.MESSAGE_NUMBER +
+                    (Constant.MESSAGE_LENGTH + message.length()) * messageNum;
+
+            byte command[] = new byte[length];
+            int position = 0;
+            insertIntToBytes(command, length, Constant.TOTAL_LENGTH, position);
+            position += Constant.TOTAL_LENGTH;
+            insertIntToBytes(command, -128, Constant.COMMAND_LENGTH, position);
+            position += Constant.COMMAND_LENGTH;
+            insertIntToBytes(command, queueName.length(), Constant.QUEUE_NAME_LENGTH, position);
+            position += Constant.QUEUE_NAME_LENGTH;
+            insertStringToBytes(command, queueName, queueName.length(), position);
+            position += queueName.length();
+            insertIntToBytes(command, messageNum, Constant.MESSAGE_NUMBER, position);
+            position += Constant.MESSAGE_NUMBER;
+            for (int i = 0; i < messageNum; i++) {
+                insertIntToBytes(command, message.length(), Constant.MESSAGE_LENGTH, position);
+                position += Constant.MESSAGE_LENGTH;
+                insertStringToBytes(command, message, message.length(), position);
+                position += message.length();
+            }
+
+            out.write(command);
+            out.flush();
+        }
+
+
 //
 //        byte[] command2 = {0,7,(byte)64,1,97,0,1};
 //        out.write(command2);
@@ -58,6 +91,10 @@ public class StoreTest {
 //        in.read(command5, 0, length - 2);
 //        int l = byteToInt(command5,0,Constant.INT_LENGTH);
 //        System.out.println(l);
-        socket.close();
+//        socket.close();
+    }
+    @Test
+    public void test2(){
+
     }
 }

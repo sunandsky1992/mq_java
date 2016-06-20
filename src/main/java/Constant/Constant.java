@@ -29,13 +29,15 @@ public class Constant {
     public static final double EXPAND_LINE = 90;
 
     //NSR地址
-    public static final String NSR_ADDR = "127.0.0.1";
+    public static final String NSR_ADDR = "10.108.114.110";
     public static final int NSR_PORT = 8000;
-    public static final String NATIVE_ADDR = "127.0.0.1";
-    public static final int NATIVE_PORT = 8001;
+    public static final String NATIVE_ADDR = "10.108.114.47";
+    public static final int NATIVE_PORT = 8111;
     public static final String MODEL_NAME = "TEST1";
     public static final String FRONT_ADDR = "127.0.0.1";
     public static final int FRONT_PORT = 8200;
+    public static final String REDIS_ADDR = "10.108.114.172";
+    public static final int REDIS_PORT = 6379;
 
     //
     public static final int STORE_RECORD_LENGTH = 1000;

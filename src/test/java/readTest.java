@@ -15,7 +15,7 @@ import static Command.CommandServer.byteToString;
  * Created by ss on 16-6-1.
  */
 public class readTest {
-    @Test
+
     public void test() throws IOException {
         Socket socket = new Socket();
         InetSocketAddress address = new InetSocketAddress("localhost", 8002);
@@ -39,5 +39,9 @@ public class readTest {
                 System.out.println(num+" "+new Date());
             }
         }
+    }
+    @Test
+    public void test2(){
+
     }
 }

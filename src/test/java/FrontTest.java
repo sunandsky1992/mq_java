@@ -14,7 +14,6 @@ import static Command.CommandServer.byteToString;
  * Created by ss on 16-5-31.
  */
 public class FrontTest {
-    @Test
     public void test() throws IOException {
         Socket socket = new Socket();
         InetSocketAddress address = new InetSocketAddress("localhost", 8200);
@@ -49,6 +48,11 @@ public class FrontTest {
         }
         //String res1 = byteToString(command3,0,length-2);
         //System.out.println(res1);
+
+    }
+
+    @Test
+    public void test2(){
 
     }
 }

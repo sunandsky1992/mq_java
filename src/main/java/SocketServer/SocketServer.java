@@ -89,7 +89,7 @@ public  class SocketServer {
         private Socket connection;
 
         private CommandServer commandServer;
-        ToCommandServer(Socket connection,CommandServer commandServer) {
+            ToCommandServer(Socket connection,CommandServer commandServer) {
             this.connection = connection;
             this.commandServer = commandServer;
             commandServer.setConnect(connection);
@@ -97,14 +97,14 @@ public  class SocketServer {
 
         public void run() {
             try {
-                InputStream in = connection.getInputStream();
-                byte[] firstTwoByte = new byte[Constant.TOTAL_LENGTH];
-                while (in.read(firstTwoByte, 0, 2)==2) {
-                    int commandLength = (firstTwoByte[0] << 8) + firstTwoByte[1];
-                  //  System.out.println("commandLength: " + commandLength);
-                    byte command[] = new byte[commandLength];
-                    int res = in.read(command, 0, commandLength-Constant.TOTAL_LENGTH);
-                    commandServer.analysisCommand(command);
+                    InputStream in = connection.getInputStream();
+                    byte[] firstTwoByte = new byte[Constant.TOTAL_LENGTH];
+                    while (in.read(firstTwoByte, 0, 2)==2) {
+                        int commandLength = (firstTwoByte[0] << 8) + firstTwoByte[1];
+                      //  System.out.println("commandLength: " + commandLength);
+                        byte command[] = new byte[commandLength];
+                        int res = in.read(command, 0, commandLength-Constant.TOTAL_LENGTH);
+                        commandServer.analysisCommand(command);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

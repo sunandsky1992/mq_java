@@ -314,6 +314,7 @@ public class FrontCommandServer extends CommandServer {
             OutputStream out = socket.getOutputStream();
             out.write(command);
             out.flush();
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
             return;
