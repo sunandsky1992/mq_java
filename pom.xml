@@ -40,7 +40,15 @@
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.6.3</version>
+        </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>

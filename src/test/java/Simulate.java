@@ -29,6 +29,7 @@ public class Simulate {
     private int mid = 400;
     @Test
     public void Simulate() throws InterruptedException {
+
         int num=0;
         Queue[] queues = new Queue[20];
         Store[] stores = new Store[4];
@@ -41,6 +42,8 @@ public class Simulate {
             stores[i] = new Store();
             stores[i].storeId = i;
         }
+
+        int arr[][] = new int[4][241];
         while (true) {
 
 
@@ -121,27 +124,39 @@ public class Simulate {
                 }
             }
 
-
+            int flag = 0;
             System.out.println("===============================================");
             System.out.println("release:");
             for (Store storeLoad:releaseStores) {
                 System.out.println("storeId :"+storeLoad.storeId);
                 System.out.println(storeLoad.getHistoryRecord()[0]);
+                if (storeLoad.getHistoryRecord()[0]!=0)
+                    flag = 1;
+                arr[storeLoad.storeId][num] = storeLoad.getHistoryRecord()[0];
             }
             System.out.println("balance:");
             for (Store storeLoad:balanceStores) {
                 System.out.println("storeId :"+storeLoad.storeId);
                 System.out.println(storeLoad.getHistoryRecord()[0]);
+                if (storeLoad.getHistoryRecord()[0]!=0)
+                    flag = 1;
+                arr[storeLoad.storeId][num] = storeLoad.getHistoryRecord()[0];
             }
             System.out.println("idle:");
             for (Store storeLoad:idleStores) {
                 System.out.println("storeId :"+storeLoad.storeId);
                 System.out.println(storeLoad.getHistoryRecord()[0]);
+                if (storeLoad.getHistoryRecord()[0]!=0)
+                    flag = 1;
+                arr[storeLoad.storeId][num] = storeLoad.getHistoryRecord()[0];
             }
             System.out.println("normal:");
             for (Store storeLoad:normalStores) {
                 System.out.println("storeId :"+storeLoad.storeId);
                 System.out.println(storeLoad.getHistoryRecord()[0]);
+                if (storeLoad.getHistoryRecord()[0]!=0)
+                    flag = 1;
+                arr[storeLoad.storeId][num] = storeLoad.getHistoryRecord()[0];
             }
             System.out.println("===============================================");
 
@@ -166,7 +181,13 @@ public class Simulate {
                     }
                 }
             }
-            if (num>160) {
+            if (flag == 0 && num>160) {
+
+                break;
+            }
+
+            System.out.println("num:"+num);
+            if (num>=160) {
                 for (int i=(num-160)/20*5;i<(num-160)/20*5+5;i++) {
                     queues[i].messageNum-=4;
                 }
@@ -187,10 +208,19 @@ public class Simulate {
 
             num++;
 
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
         }
+        for (int i=0;i<4;i++)
+            print(arr[i]);
     }
 
+    public void print(int a[]){
+        System.out.printf("{%3d",a[0]);
+        for (int i=1;i<a.length;i++) {
+            System.out.printf(" , %3d",a[i]);
+        }
+        System.out.println("}");
+    }
 
     public int getReleaseNumByMessageNum(Store[] stores) {
         int totalNum = stores.length;
